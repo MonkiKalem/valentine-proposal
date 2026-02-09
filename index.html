@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>For You 💖</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      background: radial-gradient(circle at top, #ffd6e8, #ff9ecb);
+      font-family: "Poppins", sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    /* ---------- GIFT SCREEN ---------- */
+    .gift-screen {
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      animation: fadeOut 1s ease forwards;
+      animation-delay: 2.8s;
+    }
+
+    .gift-box {
+      position: relative;
+      width: 180px;
+      height: 140px;
+      background: #ff4d6d;
+      border-radius: 0 0 12px 12px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+
+    .gift-lid {
+      position: absolute;
+      top: -45px;
+      left: -10px;
+      width: 200px;
+      height: 50px;
+      background: #ff758f;
+      border-radius: 12px;
+      transform-origin: bottom center;
+      animation: openLid 1s ease forwards;
+      animation-delay: 1s;
+    }
+
+    .gift-ribbon {
+      position: absolute;
+      width: 25px;
+      height: 140px;
+      background: #fff;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .gift-ribbon::before {
+      content: "";
+      position: absolute;
+      width: 180px;
+      height: 25px;
+      background: #fff;
+      top: 50%;
+      left: -77px;
+    }
+
+    .sparkle {
+      position: absolute;
+      top: -60px;
+      font-size: 40px;
+      opacity: 0;
+      animation: sparkle 1s ease forwards;
+      animation-delay: 1.8s;
+    }
+
+    @keyframes openLid {
+      to {
+        transform: rotate(-25deg) translateY(-10px);
+      }
+    }
+
+    @keyframes sparkle {
+      to {
+        opacity: 1;
+        transform: translateY(-20px) scale(1.2);
+      }
+    }
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        pointer-events: none;
+      }
+    }
+
+    /* ---------- QUESTION SCREEN ---------- */
+    .question-screen {
+      opacity: 0;
+      text-align: center;
+      animation: fadeIn 1s ease forwards;
+      animation-delay: 3.2s;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes shake {
+        0% { transform: translate(0); }
+        25% { transform: translate(-5px); }
+        50% { transform: translate(5px); }
+        75% { transform: translate(-5px); }
+        100% { transform: translate(0); }
+    }
+
+    h1 {
+      color: #fff;
+      font-size: 2.2rem;
+      margin-bottom: 30px;
+      text-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    }
+
+    .buttons {
+      position: relative;
+    }
+
+    button {
+      border: none;
+      padding: 16px 32px;
+      font-size: 18px;
+      border-radius: 14px;
+      cursor: pointer;
+      margin: 10px;
+      transition: all 0.3s ease;
+    }
+
+    #yesBtn {
+      background: #ff4d6d;
+      color: white;
+      box-shadow: 0 10px 30px rgba(255,77,109,0.5);
+    }
+
+    #noBtn {
+      background: #f1f1f1;
+      color: #555;
+      animation: shake 0.4s;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Gift Screen -->
+  <div class="gift-screen">
+    <div class="gift-box">
+      <div class="gift-lid"></div>
+      <div class="gift-ribbon"></div>
+    </div>
+    <div class="sparkle">✨💖✨</div>
+  </div>
+
+  <!-- Question Screen -->
+  <div class="question-screen">
+    <h1>Will you be my Valentine? 💘</h1>
+    <div class="buttons">
+      <button id="yesBtn">Yes 💖</button>
+      <button id="noBtn">No 😢</button>
+    </div>
+  </div>
+
+    <script>
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+
+    let scale = 1;
+    let noClickCount = 0;
+
+    const noTexts = [
+        "Are you sure?",
+        "Really? 😳",
+        "Think again 😭",
+        "Pleaseee 💔",
+        "Last chance 😈",
+        "You can't escape 😏"
+    ];
+
+    function moveNoButton() {
+        const x = Math.random() * 200 - 100;
+        const y = Math.random() * 200 - 100;
+        noBtn.style.transform = `translate(${x}px, ${y}px)`;
+    }
+
+    noBtn.addEventListener("mouseover", moveNoButton);
+
+    noBtn.addEventListener("touchstart", moveNoButton);
+
+    noBtn.addEventListener("click", () => {
+        // Grow YES button
+        scale += 0.3;
+        yesBtn.style.transform = `scale(${scale})`;
+
+        // Change NO text
+        noBtn.textContent =
+        noTexts[Math.min(noClickCount, noTexts.length - 1)];
+        noClickCount++;
+
+        // Also move NO button on click
+        moveNoButton();
+
+        // When YES is unstoppable 😈
+        if (scale > 3) {
+        yesBtn.style.position = "fixed";
+        yesBtn.style.top = "0";
+        yesBtn.style.left = "0";
+        yesBtn.style.width = "100vw";
+        yesBtn.style.height = "100vh";
+        yesBtn.style.fontSize = "40px";
+        yesBtn.style.borderRadius = "0";
+        yesBtn.style.zIndex = "999";
+        }
+    });
+
+    yesBtn.addEventListener("click", () => {
+        document.body.innerHTML = `
+        <div style="
+            height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            background:#ff4d6d;
+            color:white;
+            font-size:3rem;
+            text-align:center;
+        ">
+            YAYYYY 💕😋🤟<br/>
+            Best decision ever 🤭
+        </div>
+        `;
+    });
+    </script>
+
+
+</body>
+</html>
